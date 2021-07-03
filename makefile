@@ -64,7 +64,7 @@ CWARNS= $(CWARNSCPP) $(CWARNSC) $(CWARNGCC)
 LOCAL = $(TESTS) $(CWARNS)
 
 CC= gcc
-CFLAGS= -G0 -Wall -O2 $(MYCFLAGS) -fno-stack-protector -fno-common -march=native
+CFLAGS= -Wall -O2 $(MYCFLAGS) -fno-stack-protector -fno-common -march=native
 AR= ar rc
 RANLIB= ranlib
 RM= rm -f
@@ -74,7 +74,8 @@ ifeq ($(platform),PS2)
 	CC = $(EE_CC)
 	AR = $(EE_AR) rc
 	RANLIB= mips64r5900el-ps2-elf-ranlib
-	MYCFLAGS= $(LOCAL) -std=c99
+	MYCFLAGS= $(LOCAL) -std=c99 -DLUA_USE_PS2
+	EE_CFLAGS= -Wall -O2 $(MYCFLAGS) -fno-stack-protector -fno-common -march=r5900
 	include $(PS2SDK)/samples/Makefile.pref
 	include $(PS2SDK)/samples/Makefile.eeglobal
 else

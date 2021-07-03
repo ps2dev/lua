@@ -63,19 +63,27 @@ CWARNS= $(CWARNSCPP) $(CWARNSC) $(CWARNGCC)
 
 LOCAL = $(TESTS) $(CWARNS)
 
-
-# enable Linux goodies
-MYCFLAGS= $(LOCAL) -std=c99 -DLUA_USE_LINUX -DLUA_USE_READLINE
-MYLDFLAGS= $(LOCAL) -Wl,-E
-MYLIBS= -ldl -lreadline
-
-
 CC= gcc
 CFLAGS= -Wall -O2 $(MYCFLAGS) -fno-stack-protector -fno-common -march=native
 AR= ar rc
 RANLIB= ranlib
 RM= rm -f
 
+ifeq ($(platform),PS2)
+#Set PS2SDK stuff
+	CC = $(EE_CC)
+	AR = $(EE_AR) rc
+	RANLIB= mips64r5900el-ps2-elf-ranlib
+	MYCFLAGS= $(LOCAL) -std=c99 -DLUA_USE_PS2
+	EE_CFLAGS= -Wall -O2 $(MYCFLAGS) -fno-stack-protector -fno-common -march=r5900
+	include $(PS2SDK)/samples/Makefile.pref
+	include $(PS2SDK)/samples/Makefile.eeglobal
+else
+# enable Linux goodies
+	MYCFLAGS= $(LOCAL) -std=c99 -DLUA_USE_LINUX -DLUA_USE_READLINE
+	MYLDFLAGS= $(LOCAL) -Wl,-E
+	MYLIBS= -ldl -lreadline
+endif
 
 
 # == END OF USER SETTINGS. NO NEED TO CHANGE ANYTHING BELOW THIS LINE =========
@@ -113,9 +121,18 @@ $(CORE_T): $(CORE_O) $(AUX_O) $(LIB_O)
 $(LUA_T): $(LUA_O) $(CORE_T)
 	$(CC) -o $@ $(MYLDFLAGS) $(LUA_O) $(CORE_T) $(LIBS) $(MYLIBS) $(DL)
 
-
 clean:
 	$(RM) $(ALL_T) $(ALL_O)
+	#PS2 sample clean
+	$(MAKE) -C sample clean
+
+install: all
+ifeq ($(platform),PS2)
+	mkdir -p $(DESTDIR)$(PS2SDK)/ports/include
+	mkdir -p $(DESTDIR)$(PS2SDK)/ports/lib
+	cp lua.h luaconf.h lualib.h lauxlib.h $(DESTDIR)$(PS2SDK)/ports/include
+	cp lua liblua.a $(DESTDIR)$(PS2SDK)/ports/lib
+endif
 
 depend:
 	@$(CC) $(CFLAGS) -MM *.c

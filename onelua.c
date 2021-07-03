@@ -24,6 +24,7 @@
 
 #include "lprefix.h"
 
+#include <debug.h>
 #include <assert.h>
 #include <ctype.h>
 #include <errno.h>

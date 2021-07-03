@@ -129,7 +129,7 @@ install: all
 ifeq ($(platform),PS2)
 	mkdir -p $(DESTDIR)$(PS2SDK)/ports/include
 	mkdir -p $(DESTDIR)$(PS2SDK)/ports/lib
-	cp lua.h luaconf.h lualib.h lauxlib.h lua.hpp $(DESTDIR)$(PS2SDK)/ports/include
+	cp lua.h luaconf.h lualib.h lauxlib.h $(DESTDIR)$(PS2SDK)/ports/include
 	cp lua liblua.a $(DESTDIR)$(PS2SDK)/ports/lib
 endif
 

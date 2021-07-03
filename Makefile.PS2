@@ -30,10 +30,14 @@ $(CORE_T): $(CORE_O) $(AUX_O) $(LIB_O)
 
 $(LUA_T): $(LUA_O) $(CORE_T)
 	$(EE_AR) cru $@ $^
+	
+sample: all
+	$(MAKE) -C test
 
 clean:
 	rm -f -r $(ALL_T) $(ALL_O)
 	rm -d $(EE_LIB_DIR)
+	$(MAKE) -C sample clean
 
 install: all
 	mkdir -p $(DESTDIR)$(PS2SDK)/ports/include

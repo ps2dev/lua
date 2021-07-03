@@ -134,6 +134,11 @@ ifeq ($(platform),PS2)
 	cp lua liblua.a $(DESTDIR)$(PS2SDK)/ports/lib
 endif
 
+sample: all
+ifeq ($(platform), PS2)
+	$(MAKE) -C sample
+endif
+
 depend:
 	@$(CC) $(CFLAGS) -MM *.c
 

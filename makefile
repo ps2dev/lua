@@ -76,6 +76,7 @@ ifeq ($(platform),PS2)
 	RANLIB= mips64r5900el-ps2-elf-ranlib
 	MYCFLAGS= $(LOCAL) -std=c99 -DLUA_USE_PS2
 	EE_CFLAGS= -Wall -O2 $(MYCFLAGS) -fno-stack-protector -fno-common -march=r5900
+	MYLIBS= -lcdvd
 	include $(PS2SDK)/samples/Makefile.pref
 	include $(PS2SDK)/samples/Makefile.eeglobal
 else

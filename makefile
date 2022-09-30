@@ -100,12 +100,9 @@ AUX_O=	lauxlib.o
 LIB_O=	lbaselib.o ldblib.o liolib.o lmathlib.o loslib.o ltablib.o lstrlib.o \
 	lutf8lib.o loadlib.o lcorolib.o linit.o
 
-LUA_T=	lua
-LUA_O=	lua.o
 
-
-ALL_T= $(CORE_T) $(LUA_T)
-ALL_O= $(CORE_O) $(LUA_O) $(AUX_O) $(LIB_O)
+ALL_T= $(CORE_T)
+ALL_O= $(CORE_O) $(AUX_O) $(LIB_O)
 ALL_A= $(CORE_T)
 
 all:	$(ALL_T)
@@ -119,9 +116,6 @@ $(CORE_T): $(CORE_O) $(AUX_O) $(LIB_O)
 	$(AR) $@ $?
 	$(RANLIB) $@
 
-$(LUA_T): $(LUA_O) $(CORE_T)
-	$(CC) -o $@ $(MYLDFLAGS) $(LUA_O) $(CORE_T) $(LIBS) $(MYLIBS) $(DL)
-
 clean:
 	$(RM) $(ALL_T) $(ALL_O)
 	#PS2 sample clean
@@ -132,7 +126,7 @@ ifeq ($(platform),PS2)
 	mkdir -p $(DESTDIR)$(PS2SDK)/ports/include
 	mkdir -p $(DESTDIR)$(PS2SDK)/ports/lib
 	cp lua.h luaconf.h lualib.h lauxlib.h $(DESTDIR)$(PS2SDK)/ports/include
-	cp lua liblua.a $(DESTDIR)$(PS2SDK)/ports/lib
+	cp liblua.a $(DESTDIR)$(PS2SDK)/ports/lib
 endif
 
 sample: all

@@ -401,7 +401,7 @@ static int luaB_dofile (lua_State *L) {
   lua_settop(L, 1);
   if (l_unlikely(luaL_loadfile(L, fname) != LUA_OK))
     return lua_error(L);
-  lua_callk(L, 0, LUA_MULTRET, 0, dofilecont);
+  lua_pcallk(L, 0, LUA_MULTRET, 0, 0, dofilecont);
   return dofilecont(L, 0, 0);
 }
 

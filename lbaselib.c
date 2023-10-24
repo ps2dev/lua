@@ -395,14 +395,14 @@ static int dofilecont (lua_State *L, int d1, lua_KContext d2) {
   return lua_gettop(L) - 1;
 }
 
-
+static int finishpcall (lua_State *L, int status, lua_KContext extra); // provide prototype early
 static int luaB_dofile (lua_State *L) {
   const char *fname = luaL_optstring(L, 1, NULL);
   lua_settop(L, 1);
   if (l_unlikely(luaL_loadfile(L, fname) != LUA_OK))
     return lua_error(L);
-  lua_callk(L, 0, LUA_MULTRET, 0, dofilecont);
-  return dofilecont(L, 0, 0);
+  int status = lua_pcallk(L, 0, LUA_MULTRET, 0, 0, dofilecont);
+  return finishpcall(L, status, 0); //El_isra: longjmp() is crashing. doing a protected call makes `dofile()` return instead of crashing
 }
 
 

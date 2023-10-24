@@ -6,8 +6,8 @@ EE_BIN = mini_luap.elf
 
 EE_OBJS = mini_luap.o
 
-EE_LIBS   += -L$(PS2SDK)/ports/lib -L../lib -ldebug -llua
-EE_INCS   += -I../include -Iinclude -I$(PS2SDK)/ports/include -I../src
+EE_LIBS   += -L$(PS2SDK)/ports/lib -L../lib -ldebug ../liblua.a
+EE_INCS   += -I../include -Iinclude  -I../src -I..
 
 all: $(EE_BIN)
 

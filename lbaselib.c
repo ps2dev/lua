@@ -396,7 +396,7 @@ static int dofilecont (lua_State *L, int d1, lua_KContext d2) {
 }
 
 static int finishpcall (lua_State *L, int status, lua_KContext extra); // provide prototype early
-static int luaB_dofile (lua_State *L) {
+static int luaB_dofile_protected (lua_State *L) {
   const char *fname = luaL_optstring(L, 1, NULL);
   lua_settop(L, 1);
   if (l_unlikely(luaL_loadfile(L, fname) != LUA_OK))
@@ -405,6 +405,14 @@ static int luaB_dofile (lua_State *L) {
   return finishpcall(L, status, 0); //El_isra: longjmp() is crashing. doing a protected call makes `dofile()` return instead of crashing
 }
 
+static int luaB_dofile (lua_State *L) {
+  const char *fname = luaL_optstring(L, 1, NULL);
+  lua_settop(L, 1);
+  if (l_unlikely(luaL_loadfile(L, fname) != LUA_OK))
+    return lua_error(L);
+  lua_callk(L, 0, LUA_MULTRET, 0, dofilecont);
+  return dofilecont(L, 0, 0);
+}
 
 static int luaB_assert (lua_State *L) {
   if (l_likely(lua_toboolean(L, 1)))  /* condition is true? */
@@ -491,6 +499,7 @@ static const luaL_Reg base_funcs[] = {
   {"assert", luaB_assert},
   {"collectgarbage", luaB_collectgarbage},
   {"dofile", luaB_dofile},
+  {"dofile_protected", luaB_dofile_protected},
   {"error", luaB_error},
   {"getmetatable", luaB_getmetatable},
   {"ipairs", luaB_ipairs},

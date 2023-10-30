@@ -219,6 +219,19 @@
 		LUA_CDIR"loadall.dll;" ".\\?.dll"
 #endif
 
+#elif defined(LUA_USE_PS2)			/* }{ */
+
+#if !defined(LUA_PATH_DEFAULT)
+#define LUA_PATH_DEFAULT  \
+		"./?.lua" LUA_PATH_SEP "./LIBLUA/?.lua" LUA_PATH_SEP  "mc0:/LIBLUA/?.lua" LUA_PATH_SEP "mc1:/LIBLUA/?.lua" LUA_PATH_SEP  \
+		"mass0:/LIBLUA/?.lua" LUA_PATH_SEP "mass1:/LIBLUA/?.lua" LUA_PATH_SEP  \
+		"pfs0:/LIBLUA/?.lua" LUA_PATH_SEP "host:/LIBLUA/?.lua"
+#endif
+
+#if !defined(LUA_CPATH_DEFAULT)
+#define LUA_CPATH_DEFAULT \
+		"./?.so;" "./loadall.so;"
+#endif
 #else			/* }{ */
 
 #define LUA_ROOT	"/usr/local/"

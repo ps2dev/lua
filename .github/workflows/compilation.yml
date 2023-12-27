@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  repository_dispatch:
+    types: [run_build]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: ps2dev/ps2sdk-ports:latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install dependencies
+      run: |
+        apk add build-base git
+
+    - name: Compile project
+      run: |
+        make -j $(getconf _NPROCESSORS_ONLN) clean platform=PS2
+        make -j $(getconf _NPROCESSORS_ONLN) platform=PS2
+        make -j $(getconf _NPROCESSORS_ONLN) install platform=PS2
+      
+    - name: Compile Sample
+      run: |
+        cd sample
+        make -j $(getconf _NPROCESSORS_ONLN) clean
+        make -j $(getconf _NPROCESSORS_ONLN) 
+      
+    - name: Get short SHA
+      id: slug
+      run: echo "sha8=$(echo ${GITHUB_SHA} | cut -c1-8)" >> $GITHUB_OUTPUT
+
+    - name: Upload artifacts
+      if: ${{ success() }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: lua-sample-${{ steps.slug.outputs.sha8 }}
+        path: |
+          sample/*.elf
+          sample/*.lua
+          sample/Makefile
